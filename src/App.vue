@@ -12,16 +12,57 @@
 
 <script>
 import Family from './components/Family.vue'
+import Papa from 'papaparse';
+
 export default {
+  methods: {
+      assetUrl(filename) {
+        if(document.location.host.startsWith("localhost")) {
+          return './src/assets/' + filename;
+        } else {
+          return 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/src/assets/' + filename;
+        }
+      }
+  },
   data() {
+    var families = [];
+
+    Papa.parse('http://localhost:8080/src/assets/list.csv', {
+      download:true, delimiter: ",",
+      complete: function(results, file) {
+
+         for(var i=0; i < results.data.length;i++) {
+           var family = results.data[i];
+           var filename;
+           var names = [];
+
+           if( family[0] != '') {
+             filename = family[0];
+           } else {
+             filename = 'nothing'
+           }
+
+           for(var j=1; j < family.length; j++) {
+             if(family[j]!='') {
+               names.push(family[j]);
+             }
+           }
+
+
+           family = { photo: 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/src/assets/' + filename + '.jpg', names: names };
+           families.push(family);
+         }
+       },
+     });
+
+     console.log(families);
     return {
-      families: [{ photo: 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/img/hanbyoel.jpg', names: ['김정훈', '고새롬', '김한별', '김한결']},
-      { photo: 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/img/saehan.jpg', names: ['강구윤', '이윤정', '강새한', '강새누']},
-      { photo: 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/img/chaebin.jpg', names: ['박영민', '신지영', '박채빈']},
-      { photo: 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/img/yeosung.jpg', names: ['이민환', '김은하', '이예성', '이예준']},
-    ]
+      families: families
     }
   },
+
+
+
   components: {
       'Family': Family,
     }

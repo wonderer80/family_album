@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="col family">
-    <div class="row">
+    <div class="row photo">
       <img :src=family.photo>
     </div>
     <div class="row">
       <div class="col-6" v-for="person in family.names">
-        {{ person }}
+        <p class="h5 text-center font-weight-normal name">{{ person }}</p>
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="css">
-  * {
+  div {
       border: 1px solid rgba(86, 61, 124, 0.2);
   }
 
@@ -50,4 +50,19 @@ export default {
     .family {
       width: 800px;
       }  }
+
+  .photo {
+    width: 400px;
+    height: 300px;
+  }
+
+  @media (min-width: 800px) {
+    .photo {
+      width: 800px;
+      height: 600px;
+      }  }
+
+  .name {
+    margin-top: 5px;
+  }
 </style>
