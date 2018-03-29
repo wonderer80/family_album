@@ -15,19 +15,10 @@ import Family from './components/Family.vue'
 import Papa from 'papaparse';
 
 export default {
-  methods: {
-      assetUrl(filename) {
-        if(document.location.host.startsWith("localhost")) {
-          return './src/assets/' + filename;
-        } else {
-          return 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/src/assets/' + filename;
-        }
-      }
-  },
   data() {
     var families = [];
 
-    Papa.parse('http://localhost:8080/src/assets/list.csv', {
+    Papa.parse('/src/assets/list.csv', {
       download:true, delimiter: ",",
       complete: function(results, file) {
 
@@ -47,15 +38,12 @@ export default {
                names.push(family[j]);
              }
            }
-
-
-           family = { photo: 'https://s3.ap-northeast-2.amazonaws.com/byeopssi/src/assets/' + filename + '.jpg', names: names };
+           family = { photo: './src/assets/' + filename + '.jpg', names: names };
            families.push(family);
          }
        },
      });
 
-     console.log(families);
     return {
       families: families
     }
